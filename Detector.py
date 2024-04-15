@@ -13,6 +13,11 @@ from keras.preprocessing.sequence import pad_sequences
 from keras.models import load_model
 import threading
 
+with open('Keys.txt') as f:
+    s=f.read().split('\n')
+
+catalog_id=s[0]
+API_key=s[1]
 
 class SimpleWorker:
     def __init__(self, window: sg.Window, text):
@@ -185,7 +190,7 @@ def record_and_recognize_audio(duration, text, run, mode):
 def get_answer(command, prev_command, flag):
     if flag:
         prompt = {
-            "modelUri": "gpt://b1gp9gre2ufsu9v6mb4b/yandexgpt-lite",
+            "modelUri": f"gpt://{catalog_id}/yandexgpt-lite",
             "completionOptions": {
                 "stream": False,
                 "temperature": 0.6,
@@ -205,7 +210,7 @@ def get_answer(command, prev_command, flag):
         flag = False
     else:
         prompt = {
-            "modelUri": "gpt://b1gp9gre2ufsu9v6mb4b/yandexgpt-lite",
+            "modelUri": f"gpt://{catalog_id}/yandexgpt-lite",
             "completionOptions": {
                 "stream": False,
                 "temperature": 0.6,
@@ -230,7 +235,7 @@ def get_answer(command, prev_command, flag):
     url = "https://llm.api.cloud.yandex.net/foundationModels/v1/completion"
     headers = {
         "Content-Type": "application/json",
-        "Authorization": "Api-Key AQVN02KHzu-8IT-HsmZfOFDpZK0JqnsHpJ-hnwP3"
+        "Authorization": f"Api-Key {API_key}"
     }
 
     response = requests.post(url, headers=headers, json=prompt)
